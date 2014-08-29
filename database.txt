@@ -1,0 +1,211 @@
+﻿/*
+ *  数据库更新日志
+ */
+ -- 2014-03-15 - -    佳生
+
+ (线上有)
+ALTER TABLE  `crm_time_remind` CHANGE  `time_remind_status`  `time_remind_status` TINYINT( 6 ) NULL DEFAULT  '0' COMMENT '时间提醒状态（0、提醒；-1、不提醒）'
+
+(线上有)
+ALTER TABLE  `crm_student_payment_record` ADD  `already_payment` DECIMAL( 8, 2 ) NULL COMMENT  '已缴学费' AFTER  `study_expense`
+
+(线上有)
+ALTER TABLE `crm_student_payment_record` ADD `already_payment` DECIMAL( 8, 2 ) NULL DEFAULT NULL COMMENT '已缴学费' AFTER `study_expense` 
+ 
+ 
+======start=====   阿政
+
+学生字段(线上有)
+ALTER TABLE  `crm_student` ADD  `certificate` VARCHAR( 18 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT  '身份证号码'
+ALTER TABLE  `crm_student` ADD  `is_card` TINYINT NOT NULL DEFAULT  '0' COMMENT  '是否有学生证1为有，0为无'
+ALTER TABLE  `crm_student` ADD  `is_material` TINYINT NOT NULL DEFAULT  '0' COMMENT  '是否有教材，1为有，0为无'
+
+
+班级字段(线上有)
+ALTER TABLE  `crm_classroom` ADD  `class_time` INT NULL DEFAULT NULL COMMENT  '上课时间',
+ADD  `classroom_group` INT NULL DEFAULT NULL COMMENT  '班级群号'
+
+(线上有)
+ALTER TABLE  `crm_classroom` ADD  `class_status` TINYINT NOT NULL DEFAULT  '1' COMMENT  '班级状态 1为正在上课，0为已结课'
+
+6月12日(线上有)
+ALTER TABLE  `crm_student` ADD  `student_status` TINYINT NOT NULL DEFAULT  '1' COMMENT  '学员状态 1为就读，2为毕业，0为休学'
+ALTER TABLE  `crm_student` ADD  `status_remark` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  '状态备注'
+
+6月17日(线上有)
+ALTER TABLE  `crm_classroom` ADD  `classroom_type_id` TINYINT NOT NULL COMMENT  '班级类型id' AFTER  `classroom_id`
+
+6月23日(线上有)
+ALTER TABLE  `crm_student_classroom_relation` ADD  `change_reason` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  '转班原因'
+ALTER TABLE  `crm_student` ADD  `is_computer` TINYINT NOT NULL DEFAULT  '0' COMMENT  '有无电脑，1为有，0为无'
+
+6月25日(线上有)
+ALTER TABLE  `crm_student_attendance_score` ADD  `exam_id` INT NOT NULL COMMENT  '考试id'
+
+7月9日(线上有)
+ALTER TABLE  `crm_consultant` ADD  `pre_number` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  '预学号'
+
+7月10日(线上有)
+ALTER TABLE  `crm_student_attendance_score` ADD  `time_part` TINYINT NOT NULL DEFAULT  '0' COMMENT  '考勤时间段 1为上午 2为下午 3为晚上' AFTER  `record_time`
+
+7月24日(线上有)
+导入数据表 crm_student_video.sql
+
+7月25日(线上有)
+ALTER TABLE  `crm_student_attendance_score` CHANGE  `record_time`  `record_time` INT NULL DEFAULT NULL COMMENT  '记录时间'
+
+8月7日(线上有)
+ALTER TABLE  `crm_classroom` CHANGE  `class_time`  `class_time` VARCHAR( 100 ) NULL DEFAULT NULL COMMENT  '上课时间'
+
+8月8日(线上有)
+ALTER TABLE  `crm_student_classroom_relation` ADD  `show_status` TINYINT NOT NULL DEFAULT  '1' COMMENT  '虚拟删除，1为显示，0为不显示' AFTER  `classroom_id`
+
+8月12日(线上有)
+ALTER TABLE  `crm_classroom` ADD  `old_classroom_name` VARCHAR( 100 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  '旧班级名称' AFTER `classroom_name`
+
+(线上有 -- 未加值)
+ALTER TABLE  `crm_knowledge_exam` ADD  `classroom_type_id` INT NOT NULL COMMENT  '班级类型id'   并且要加值
+
+(线上有)
+ALTER TABLE  `crm_student_classroom_relation` ADD  `is_first` TINYINT NOT NULL DEFAULT  '1' COMMENT  '是否重读，1为就读，2为重读' AFTER  `show_status`
+
+8月14日(线上有)
+ALTER TABLE  `crm_classroom_type` ADD  `type_status` TINYINT NOT NULL DEFAULT  '1' COMMENT  '1启用 0禁用'
+导入crm_market.sql          市场资源表
+导入crm_market_person.sql   市场资源联系人表
+导入crm_market_record.sql   市场资源咨询记录表
+
+8月23日(线上有)
+导入crm_upload_files.sql   文件上传表
+======end=====
+
+======start=====   佳生
+
+6月16日(线上有)
+
+导入新增“班级类型表”  classroom_type.sql  
+
+添加字段(线上有)：
+
+ALTER TABLE  `crm_knowledge` ADD  `classroom_type_id` INT NOT NULL COMMENT  '班级类型ID' AFTER  `knowledge_status`
+
+6月17日(线上有)
+
+ALTER TABLE  `crm_classroom` ADD  `course_schedule` TEXT NOT NULL COMMENT  '课程进度（知识点1，知识点2）' AFTER  `classroom_group`
+
+6月22日(线上有)
+
+ALTER TABLE  `crm_consultant` ADD  `constu_intention_course` TEXT NULL DEFAULT NULL COMMENT  '咨询者意向课程' AFTER  `show_status`
+
+6月23日(线上有)
+
+ALTER TABLE  `crm_consultant` ADD  `intention_course_remark` TEXT NULL DEFAULT NULL COMMENT  '意向课程备注' AFTER  `constu_intention_course`
+
+ALTER TABLE  `crm_student` ADD  `constu_intention_course` TEXT NULL DEFAULT NULL COMMENT  '学员意向课程' AFTER  `status_remark`
+
+ALTER TABLE  `crm_student` ADD  `intention_course_remark` TEXT NULL DEFAULT NULL COMMENT  '意向课程备注' AFTER  `constu_intention_course`
+
+6月26日(线上有)
+
+ALTER TABLE  `crm_student` ADD  `repeat_course_remark` TEXT NULL DEFAULT NULL COMMENT  '复读课程备注' AFTER  `intention_course_remark`
+
+6月27日(线上有)
+
+ALTER TABLE  `crm_student_knowleage_relation` CHANGE  `study_status`  `study_status` INT( 11 ) NOT NULL DEFAULT  '0' COMMENT '就读状态(0，未读/默认；1，已读；2，要复读；)'
+
+6月28日(业绩统计)(线上有)
+
+ALTER TABLE  `crm_consultant` ADD  `marketing_specialist_id` INT NULL DEFAULT NULL COMMENT  '市场专员ID' AFTER  `consultant_channel_remark`
+
+7月1日(线上有)
+ALTER TABLE  `crm_time_remind` CHANGE  `payment_type`  `payment_type` INT( 11 ) NOT NULL DEFAULT  '0' COMMENT '0，缴费（默认）；1，生活补贴；4，工资补贴'
+
+7月3日（线上有）
+ALTER TABLE  `crm_refund_loan_time` CHANGE  `payment_type`  `payment_type` INT( 11 ) NOT NULL DEFAULT  '0' COMMENT '0,缴费（默认）；1，生活补贴；2，定位费；3，分期缴费；4，工资方案'
+
+7月4日（线上有）
+ALTER TABLE  `crm_student_repayment_bills` ADD  `consultant_id` INT UNSIGNED NULL DEFAULT NULL COMMENT  '咨询者ID' AFTER  `student_id`
+ALTER TABLE  `crm_refund_loan_time` ADD  `consultant_id` INT UNSIGNED NULL DEFAULT NULL COMMENT  '咨询者ID' AFTER  `student_id`
+ALTER TABLE  `crm_consultant` ADD  `is_client` TINYINT NOT NULL DEFAULT  '0' COMMENT  '0，不是客户；1，是客户' AFTER  `is_student`
+
+7月7日（线上有）
+ALTER TABLE  `crm_student_repayment_bills` ADD  `is_project` TINYINT UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '0，不是；1，是' AFTER  `is_fail`
+
+7月8日（线上有）
+ALTER TABLE `crm_consultant_record` ADD `is_client` TINYINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否是客户（0，不是；1，是）' AFTER `is_student` 
+
+7月9日（线上有）
+ALTER TABLE  `crm_time_remind` ADD  `is_client` TINYINT UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '是否是客户（0，不是；1，是）' AFTER `old_employee_id`
+
+新建的两个表：crm_client（不要了）   crm_client_project_record（本地未导出）（线上有）
+
+7月10日（线上有）
+ALTER TABLE  `crm_refund_loan_time` CHANGE  `payment_status`  `payment_status` INT( 11 ) NOT NULL DEFAULT  '0' COMMENT '缴费完成状态（0，不成功；1，成功；2，删除、退费）'
+
+7月26日（线上有）
+导入crm_consulting_questions.sql   咨询常见问题表
+导入crm_regulations.sql  规章制度表
+
+7月26日（线上有）
+ALTER TABLE  `crm_employee_job` ADD  `employee_job_desc` TEXT NULL DEFAULT NULL COMMENT  '员工职位描述' AFTER  `employee_job_name`
+
+7月29日（线上有）
+导入crm_files.sql  文件存储表
+
+7月30日（线上有）
+ALTER TABLE `crm_regulations` ADD `regulation_type` TINYINT NULL DEFAULT NULL COMMENT '规章制度类型（1，公司行政管理制度；2，讲师岗位制度；3，咨询师岗位制度）' AFTER `regulation_content` 
+
+7月31日（线上有）
+ALTER TABLE  `crm_regulations` CHANGE  `regulation_type`  `regulation_type` TINYINT( 4 ) NULL DEFAULT NULL COMMENT '规章制度类型（1，公司行政管理制度；2，讲师岗位制度；3，咨询师岗位制度；4，先就业后付款申请注意事项）'
+
+8月5日（线上有）
+ALTER TABLE  `crm_time_remind` CHANGE  `time_remind_status`  `time_remind_status` SMALLINT( 6 ) NOT NULL DEFAULT  '0' COMMENT '时间提醒状态（0、提醒/默认；-1、不提醒；1，忽略）'
+
+8月5日（线上有）
+ALTER TABLE  `crm_time_remind` ADD  `is_set_view` TINYINT UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '是否上门（0，没有上门的；1，上门的）' AFTER  `is_client` （线上有）
+
+ALTER TABLE  `crm_time_remind` ADD  `is_important` TINYINT UNSIGNED NOT NULL DEFAULT  '0' COMMENT  '是否重点跟进（0，否；1，是）' AFTER `is_set_view` （线上有）
+
+ALTER TABLE  `crm_time_remind` ADD  `remind_remark` TEXT NULL DEFAULT NULL COMMENT  '提醒备注' AFTER  `is_important` （线上有）
+
+导入数据表：crm_setview_consultant_record  （线上有）
+
+8月13日（线上有）
+ALTER TABLE  `crm_student_knowleage_relation` CHANGE  `study_status`  `study_status` INT( 11 ) NOT NULL DEFAULT  '0' COMMENT '就读状态(0，未读/默认；1，已读；2，要复读；3，正在读)'
+
+8月17日（线上有）
+ALTER TABLE  `crm_time_remind` ADD  `market_id` INT NULL DEFAULT NULL COMMENT  '市场资源ID' AFTER  `student_id`
+
+ALTER TABLE  `crm_time_remind` ADD  `market_record_id` INT NULL DEFAULT NULL COMMENT  '市场咨询记录ID' AFTER  `consultant_record_id`
+
+8月18日（线上有）
+ALTER TABLE  `crm_employee` CHANGE  `employee_power`  `employee_power` TINYINT( 4 ) NOT NULL DEFAULT  '0' COMMENT '权限（0，普通权限；1，所有权限；2，人事、就业权限）'
+
+8月28日（线上有）
+ALTER TABLE  `crm_regulations` CHANGE  `regulation_type`  `regulation_type` TINYINT( 4 ) NULL DEFAULT NULL COMMENT '规章制度类型（1，公司行政管理制度；2，讲师岗位制度；3，咨询师岗位制度；4，先就业后付款申请注意事项；5，人事就业岗位规范；6，行政教务岗位规范）'
+
+======end=====
+
+
+======start=====   炎龙
+
+6月19日(线上有)
+导入新增表：crm_integral.sql
+
+添加字段(线上有)：
+ALTER TABLE  `crm_employee` ADD  `mark_power` TINYINT NOT NULL DEFAULT  '0' COMMENT  '评分权限;默认0只有查看权，1有评分权，2有审核和添加标准等所有权';
+
+======end=====
+
+
+============start=======  炎龙(7月1)(线上有)
+ALTER TABLE  `crm_standard` ADD  `type` TINYINT NOT NULL DEFAULT  '0' COMMENT  '0总则；1加分细则；2减分细则',
+ADD  `remark` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT  '备注';
+
+===========end==========
+
+
+
+备注：
+
+crm_marketing_specialist  市场专员表（目前不需要的，先保留）   佳生

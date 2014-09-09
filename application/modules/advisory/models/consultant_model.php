@@ -457,14 +457,14 @@ class Advisory_consultant_model extends CI_Model
 	public function select_record_time($start,$limit,$start_time,$end_time,$teach_id='',$where='')
 	{
 		
-		$w=' 1 ';
+		$w=' c.show_status=1 ';
 		//超级管理员选择某个咨询师查看
 		if($teach_id!==''){
-			$w.="AND employee_id={$teach_id} ";
+			$w.="AND c.employee_id={$teach_id} ";
 		}
 
 		if($this->p==0){
-			$w.="AND employee_id=".$this->employee_id;
+			$w.="AND c.employee_id=".$this->employee_id;
 		}
 
        	//搜索日期
@@ -497,7 +497,7 @@ class Advisory_consultant_model extends CI_Model
 	 */
 	public function select_record_time_count($start_time,$end_time,$teach_id='',$where='')
 	{
-		$w=' 1 ';
+		$w=' c.show_status=1 ';
 		//超级管理员选择某个咨询师查看
 		if($teach_id!==''){
 			$w.="AND c.employee_id={$teach_id} ";
@@ -616,5 +616,62 @@ class Advisory_consultant_model extends CI_Model
 
 		return $data->result_array();
 	
+	}
+	/**
+	 * 查询咨询者的id和员工的id
+	 */
+	public function select_id()
+	{
+		/**
+		 * 1、查询每个咨询者咨询记录（is_student=0）1.1连表查询获得最大的时间，先查咨询者循环出来在用
+		 * 2、获取咨询记录最大的时间(空的咨询记录就不要去算了)
+		 * 3、最大时间和当前时间比相差一个月就得到该资源
+		 */
+		$field='consultant_id,employee_id';
+		$this->db->select($field)
+				 ->where('show_status',1)
+				 ->where('is_student',0);
+				 //->limit($limit,$start)
+
+		$data=$this->db->get($this->t);
+
+		return $data->result_array();		 
+	}
+	/**
+	 * 查询公共资源的咨询者
+	 */
+	public function select_common($start,$limit)
+	{
+		/**
+		 * 1、查询每个咨询者咨询记录（is_student=0）1.1连表查询获得最大的时间，先查咨询者循环出来在用
+		 * 2、获取咨询记录最大的时间
+		 * 3、最大时间和当前时间比相差一个月就得到该资源
+		 */
+		$field='consultant_id,consultant_name,consultant_sex,consultant_set_view,is_student,consultant_firsttime,employee_id,is_client,show_status,old_employee_id';
+		$this->db->select($field)
+				 ->where('show_status',1)
+				 ->where('is_student',0)
+				 ->where('employee_id',0)
+				 ->limit($limit,$start);
+
+		$data=$this->db->get($this->t);
+
+		return $data->result_array();		 
+
+	
+	}
+	/**
+	 * 公共资源的咨询者统计
+	 */
+	public function select_common_count()
+	{
+
+		//权限
+		//$this->_power();
+
+		$this->db->where('show_status',1);
+		$this->db->where('employee_id',0);
+
+		return $this->db->count_all_results($this->t);
 	}
 }

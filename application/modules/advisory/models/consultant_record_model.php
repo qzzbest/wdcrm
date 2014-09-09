@@ -69,4 +69,54 @@ class Advisory_consultant_record_model extends CI_Model
 
 		return $this->db->affected_rows();
 	}
+	/**
+	 *	咨询者信息查询
+	 */
+	public function select($like)
+	{
+	
+		$query = $this->db->query('select consultant_id,consultant_record_desc from crm_consultant_record where consultant_record_desc="'.$like.'"') ;
+		$result = $query->result_array();
+		
+		//var_dump($result);die;
+		return $result;
+		}
+	/**
+	 *	咨询者信息连表查询
+	 */
+	public function select_consultant_record($like)
+	{
+		
+		// $this->db->select('consultant.consultant_id')
+		// 		 ->from($this->t)
+		// 		 ->join('consultant','consultant.consultant_id='.$this->t.'.consultant_id','left')
+		// 		 ->like($this->t.'.consultant_record_desc',$like)
+		// 		 ->group_by("consultant.consultant_id");
+		
+		// $data=$this->db->get();
+	
+		
+		// return $data->result_array();
+	$query = $this->db->query('select ccr.consultant_id,ccr.consultant_record_desc,c.* from crm_consultant_record as ccr left join crm_consultant as c on ccr.consultant_id=c.consultant_id where c.is_student=0 and ccr.consultant_record_desc like "%'.$like.'%"') ;
+
+		$result = $query->result_array();
+		
+		
+		return $result;
+		
+	}
+	/**
+	 *	查询咨询者的咨询记录
+	 */
+	public function select_record_maxtime($consultant_id)
+	{	
+		$field='consultant_record_time';
+		$this->db->select_max($field)
+				 ->where('consultant_id',$consultant_id);
+				 
+		$data=$this->db->get($this->t);
+
+        return $data->row_array();
+		
+	}
 }

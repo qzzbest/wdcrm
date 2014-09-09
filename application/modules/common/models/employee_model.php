@@ -229,5 +229,24 @@ class Common_employee_model extends CI_Model
 		$query = $this->db->query($sql);
 	}
 
+	/**
+	 * 通讯录列表
+	 */
+	public function select_contact($start,$limit)
+	{
+		$this->db->select('*')
+				 ->limit($limit,$start);
+		 
+		$data=$this->db->get($this->t);
 
+		return $data->result_array();
+	}
+	/**
+	 * 通讯录分页统计
+	 */
+	public function select_contact_count()
+	{
+
+		return $this->db->count_all_results($this->t);
+	}
 }

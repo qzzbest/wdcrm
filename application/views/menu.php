@@ -81,6 +81,12 @@
 						已上门
 					</a>
 				</li>
+				<li>
+					<a href="<?php echo site_url(module_folder(2).'/advisory/commonResource');?>">
+						<i class="icon-double-angle-right"></i>
+						公共资源
+					</a>
+				</li>
 			</ul>
 		</li>
 		
@@ -239,7 +245,7 @@
 					<li>
 						<a href="<?php echo site_url(module_folder(4).'/classroom_type/index');?>">
 							<i class="icon-double-angle-right"></i>
-							班级类型配置
+							班级类型
 						</a>
 					</li>
 				</ul>
@@ -365,6 +371,12 @@
 						咨询提醒
 					</a>
 				</li>
+				<li>
+					<a href="<?php echo site_url(module_folder(5).'/contact/index');?>">
+						<i class="icon-double-angle-right"></i>
+						通讯录
+					</a>
+				</li>
 				<?php }?>
 			</ul>
 		</li>
@@ -375,7 +387,7 @@
 		<li>
 			<a href="#" class="dropdown-toggle">
 				<i class="icon-list"></i>
-				<span class="menu-text"> 简历下载 </span>
+				<span class="menu-text"> 文件下载 </span>
 		
 				<b class="arrow icon-angle-down"></b>
 			</a>
@@ -383,7 +395,13 @@
 				<li>
 					<a href="<?php echo site_url(module_folder(5).'/file/index');?>">
 						<i class="icon-double-angle-right"></i>
-						文件列表
+						简历下载
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo site_url(module_folder(5).'/file_data/index');?>">
+						<i class="icon-double-angle-right"></i>
+						资料下载
 					</a>
 				</li>
 			</ul>

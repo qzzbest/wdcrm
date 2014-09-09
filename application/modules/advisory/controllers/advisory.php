@@ -136,6 +136,18 @@ class Advisory_advisory_module extends CI_Module {
 					$count=$this->consultant->select_index_count($key,$search,$start_time,$end_time,$consultant_id,'',$statistics_id);
 				}
 
+			}else if($key=='consultant_record'){
+					//咨询者记录
+					$this->load->model('consultant_record_model');
+
+					//$consultant_record=$this->consultant_record_model->select($search); #查咨询记录信息
+					
+					$consultant=$select_consultant_record=$this->consultant_record_model->select_consultant_record($search);
+					$count=count($select_consultant_record);
+					//var_dump($consultant_record);
+					//print_r($select_consultant_record);
+					 #查咨询者信息
+					//die;
 			}else{
 				//联系方式查找
 				$model="consul_stu_{$key}_model";
@@ -310,6 +322,94 @@ class Advisory_advisory_module extends CI_Module {
 
 		#指定模板
 		$this->load->view('advisory_list',$data);
+	}
+	/**
+	 * 公共资源
+	 */
+	public function commonResource()
+	{
+		$data['cur_pag']=$page=$this->input->get('per_page') ? $this->input->get('per_page'):1;
+		$limit=20;
+		$start=($page-1)*$limit;
+
+		$this->load->model('consultant_model','consultant');
+		$list = $this->consultant->select_id();
+		$consultant = $this->consultant->select_common($start,$limit);
+		$count = $this->consultant->select_common_count();
+
+		/*$this->load->model('consultant_record_model');
+		foreach ($list as $key => $value) {
+			$maxtime=$this->consultant_record_model->select_record_maxtime($value['consultant_id']);*/
+			/*
+				如果当前时间减去查询出来的时间大于30天（30*24*60*60）就更新咨询者对应的员工id为0，并把之前的员工id更新到旧员工id字段里(条件是该咨询者要有咨询记录)
+			*/
+			/*$count_where = array('consultant_id'=>$value['consultant_id']);
+			$count_record = $this->main_data_model->count($count_where,'consultant_record');
+			if($count_record>0 && time()-$maxtime['consultant_record_time']>259200){
+				$update_employee=array(
+					'old_employee_id'=>$value['employee_id'],
+					'employee_id'=>0
+				);
+				$where_cons = array('consultant_id'=>$value['consultant_id']);
+				$this->main_data_model->update($where_cons,$update_employee,'consultant');
+			}
+		}*/
+		//print_r($consultant);die;
+		#翻页序号
+		$begin = ($page-1)*$limit+1;//当前页第几条开始
+		$total = $page*$limit;//每页总数
+		$number = array();
+		for($i=$begin;$i<=$total;$i++){
+				$number[]=$i;//当前页的每个值赋给数组
+		}
+		foreach ($consultant as $k => $v) {
+			#序号
+			$consultant[$k]['serial_number']=$number[$k];
+			#手机号
+			$tmp= $this->main_data_model->setTable('consul_stu_phones')
+										->select('phone_number',array('consultant_id'=>$v['consultant_id']));
+		
+			
+			$consultant[$k]['phone']=$this->_dataProcess($tmp,'phone_number');
+			
+			#qq
+			$tmp= $this->main_data_model->setTable('consul_stu_qq')
+										->select('qq_number',array('consultant_id'=>$v['consultant_id']));
+			
+			
+			$consultant[$k]['qq']=$this->_dataProcess($tmp,'qq_number');
+
+			#email
+			$tmp= $this->main_data_model->setTable('consul_stu_email')
+										->select('email',array('consultant_id'=>$v['consultant_id']));
+			
+			
+			$consultant[$k]['email']=$this->_dataProcess($tmp,'email');
+
+			#旧员工
+			$consultant[$k]['old_employee'] = $this->main_data_model->setTable('employee')->getOne(array('employee_id'=>$v['old_employee_id']),'employee_name');
+		}
+		#分页类
+		$this->load->library('pagination');
+		
+		$data['tiao']=$config['base_url']=site_url(module_folder(2)."/advisory/commonResource?");
+
+		$config['total_rows'] = $count;
+		$config['per_page'] = $limit; 
+
+		$config['num_links'] = 5;
+		$config['page_query_string']=true;
+		
+		$this->pagination->initialize($config);
+		$create_page= $this->pagination->create_links();
+
+		$data['advisory_info']=array(
+			'count'=>$count,
+			'list'=>$consultant,
+			'page'=>$create_page,
+		);
+
+		$this->load->view('common_advisory_list',$data);
 	}
 	/**
 	 * 建立url地址

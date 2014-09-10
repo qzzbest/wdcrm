@@ -213,41 +213,193 @@ class Administration_admin_module extends CI_Module {
 	public function edit()
 	{
 		if(isset($_POST['dosubmit'])){
-			$id = $this->input->post('id');
-			$password = $this->input->post("password");
-			$pwdnew = $this->input->post("pwdnew");
-			/*$pwdconfirm = $this->input->post("pwdconfirm");*/
-			$pname = $this->input->post("pname");
-			$role = $this->input->post("role");
-			$mark_power = $this->input->post("mark_power");
+			header("Content-Type:text/html;charset=utf-8");
+			echo '<pre>';print_r($_POST);
+			$employee_id = $this->input->post('id');	//员工id
+			$password = $this->input->post("password");	//员工密码
+			$pwdnew = $this->input->post("pwdnew");		//员工新密码
 
-			$user=$this->main_data_model->getOne("employee_id = '{$id}'");
+			$where = array('employee_id'=>$employee_id);
+			$user=$this->main_data_model->getOne($where);
 			//如果密码为空就默认原来的密码
 			if(isset($password) && !empty($password)){
-				/*if($user['admin_password'] != md5($password)){
-					show_message('原密码错误');
-				}*/
 				if($password !== $pwdnew){
 					show_message('密码和确认密码不一致');
 				}
-				$pw_md5=md5($pwdnew);
+				$data['admin_password']=md5($pwdnew);	//密码
 			}else{
-				$pw_md5=$user['admin_password'];
+				$data['admin_password']=$user['admin_password'];
 			}
-			
-			$data=array(
-				'admin_password'=>$pw_md5,
-				'employee_name'=>$pname,
-			);
 
-			if($role){
-				$data['employee_job_id'] = $role;
-			}
-			if($mark_power){
-				$data['mark_power'] = $mark_power;
-			}
+			$data['employee_name'] = $this->input->post("pname");	//真实姓名
+			$data['mark_power'] = $this->input->post("mark_power");	//权限（评分方面）
+			$data['department_id'] = $this->input->post("department");	//部门
+			$data['employee_job_id'] = $this->input->post("role");		//角色
+			$data['employee_telephone'] = $this->input->post("telephone");	//电话
+			$data['employee_sex'] = $this->input->post("sex");				//性别
+			$data['identity_card_number'] = $this->input->post("id_card");	//身份证
+			$year = $this->input->post("selectYear");				//年
+			$month = $this->input->post("selectMonth");				//月
+			$day = $this->input->post("selectDay");					//日
+			$data['birthday'] = strtotime($year.'-'.$month.'-'.$day);	//出生日期
+			$data['province'] = $this->input->post("province");		//省
+			$data['city'] = $this->input->post("city");				//市
+			$data['area'] = $this->input->post("sc");				//区/县
+			$data['is_marry'] = $this->input->post("is_marry");		//婚姻状况
+			$data['employee_education'] = $this->input->post("education");	//学历
+			$data['employee_major'] = $this->input->post("specialty");		//专业
+			$data['graduate_institutions'] = $this->input->post("school");			//毕业学校
+			$data['employed_date'] = strtotime($this->input->post("entry_time"));	//入职时间
+
+			#接收phone QQ email
+	  		$update_phone= $this->input->post("update_phone");
+			$update_work_phone= $this->input->post("update_phone_hide");
+			$add_phone= $this->input->post("add_phone");
+			$add_work_phone= $this->input->post("add_phone_hide");
+
+			$update_qq= $this->input->post("update_qq");
+			$update_work_qq= $this->input->post("update_qq_hide");
+			$add_qq= $this->input->post("add_qq");
+			$add_work_qq= $this->input->post("add_qq_hide");
+
+			$update_email= $this->input->post("update_email");
+			$update_work_email= $this->input->post("update_email_hide");
+			$add_email= $this->input->post("add_email");
+			$add_work_email= $this->input->post("add_email_hide");
+
+			$update_weixin= $this->input->post("update_weixin");
+			$add_weixin= $this->input->post("add_weixin");
+//print_r($data);
+//die;
 			
-	  		$this->main_data_model->update("employee_id = '{$id}'",$data);
+	  		$result = $this->main_data_model->update($where,$data);
+
+	  		//更新phone
+			if($update_phone && !empty($update_phone)){
+				foreach ($update_phone as $k=>$v) {
+					$v= trim($v);
+					$where_phone = array('employee_phone_id'=>$k);
+					if($v!=''){
+						$edit_phone=array();
+						$edit_phone['employee_id']=$employee_id;
+						$edit_phone['employee_phone_number']=$v;
+						$edit_phone['is_workphone']=$update_work_phone[$k];
+						//第几个phone
+						$re1=$this->main_data_model->update($where_phone,$edit_phone,'employee_phone');
+					}else{
+						//如果为空，就删除
+						$this->main_data_model->delete($where_phone,1,'employee_phone');
+					}
+				}
+			}
+			//插入phone
+			if($add_phone && !empty($add_phone)){
+	  			$add_phone=array_unique($add_phone);
+				foreach ($add_phone as $k=>$v) {
+					$v= trim($v);
+					if($v!=''){
+						$insert_phone=array();
+						$insert_phone['employee_id']=$employee_id;
+						$insert_phone['employee_phone_number']=$v;
+						$insert_phone['is_workphone']=$add_work_phone[$k];
+						$res1=$this->main_data_model->insert($insert_phone,'employee_phone');
+					}
+				}
+			}
+			//更新qq
+			if($update_qq && !empty($update_qq)){
+				foreach ($update_qq as $k=>$v) {
+					$v= trim($v);
+					$where_qq = array('employee_qq_id'=>$k);
+					if($v!=''){
+						$edit_qq=array();
+						$edit_qq['employee_id']=$employee_id;
+						$edit_qq['employee_qq']=$v;
+						$edit_qq['is_workqq']=$update_work_qq[$k];
+						//第几个phone
+						$re2=$this->main_data_model->update($where_qq,$edit_qq,'employee_qq');
+					}else{
+						//如果为空，就删除
+						$this->main_data_model->delete($where_qq,1,'employee_qq');
+					}
+				}
+			}
+			//插入qq
+			if($add_qq && !empty($add_qq)){
+	  			$add_qq=array_unique($add_qq);
+				foreach ($add_qq as $k=>$v) {
+					$v= trim($v);
+					if($v!=''){
+						$insert_qq=array();
+						$insert_qq['employee_id']=$employee_id;
+						$insert_qq['employee_qq']=$v;
+						$insert_qq['is_workqq']=$add_work_qq[$k];
+						$res2=$this->main_data_model->insert($insert_qq,'employee_qq');
+					}
+				}
+			}
+			//更新email
+			if($update_email && !empty($update_email)){
+				foreach ($update_email as $k=>$v) {
+					$v= trim($v);
+					$where_email = array('email_id'=>$k);
+					if($v!=''){
+						$edit_email=array();
+						$edit_email['employee_id']=$employee_id;
+						$edit_email['employee_email_number']=$v;
+						$edit_email['is_workemail']=$update_work_email[$k];
+						//第几个phone
+						$re3=$this->main_data_model->update($where_email,$edit_email,'employee_email');
+					}else{
+						//如果为空，就删除
+						$this->main_data_model->delete($where_email,1,'employee_email');
+					}
+				}
+			}
+			//插入email
+			if($add_email && !empty($add_email)){
+	  			$add_email=array_unique($add_email);
+				foreach ($add_email as $k=>$v) {
+					$v= trim($v);
+					if($v!=''){
+						$insert_email=array();
+						$insert_email['employee_id']=$employee_id;
+						$insert_email['employee_email_number']=$v;
+						$insert_email['is_workemail']=$add_work_email[$k];
+						$res3=$this->main_data_model->insert($insert_email,'employee_email');
+					}
+				}
+			}
+			//更新微信
+			if($update_weixin && !empty($update_weixin)){
+				foreach ($update_weixin as $k=>$v) {
+					$v= trim($v);
+					$where_weixin = array('employee_weixin_id'=>$k);
+					if($v!=''){
+						$edit_weixin=array();
+						$edit_weixin['employee_id']=$employee_id;
+						$edit_weixin['employee_weixin_number']=$v;
+						//第几个phone
+						$re4=$this->main_data_model->update($where_weixin,$edit_weixin,'employee_weixin');
+					}else{
+						//如果为空，就删除
+						$this->main_data_model->delete($where_weixin,1,'employee_weixin');
+					}
+				}
+			}
+			//插入微信
+			if($add_weixin && !empty($add_weixin)){
+	  			$add_weixin=array_unique($add_weixin);
+				foreach ($add_weixin as $v) {
+					$v= trim($v);
+					if($v!=''){
+						$insert_weixin=array();
+						$insert_weixin['employee_id']=$employee_id;
+						$insert_weixin['employee_weixin_number']=$v;
+						$res4=$this->main_data_model->insert($insert_weixin,'employee_weixin');
+					}
+				}
+			}
 			redirect(module_folder(1).'/admin/index');
 		}
 		
@@ -282,7 +434,6 @@ class Administration_admin_module extends CI_Module {
 		$data['info'] = $info;
 		$data['employee_phone1']= array_shift($employee_phone);
 		$data['employee_phone'] = $employee_phone;
-		//print_r($data['employee_phone1']);
 		$data['employee_qq1']   = array_shift($employee_qq);
 		$data['employee_qq']    = $employee_qq;
 		$data['employee_email1']= array_shift($employee_email);
@@ -631,4 +782,68 @@ class Administration_admin_module extends CI_Module {
 		exit;
 	}
 
+	public function deleteQQ()
+	{
+		header("Content-Type:text/html;charset=utf-8");
+
+		$qq_id = $this->input->post('qid');
+
+		$where = array('employee_qq_id'=>$qq_id);	
+		$res = $this->main_data_model->delete($where,1,'employee_qq');
+
+		if($res){
+			echo json_encode(array('status'=>1));
+		}else{
+			echo json_encode(array('status'=>0));
+		}
+		exit;
+	}
+	public function deleteEmail()
+	{
+		header("Content-Type:text/html;charset=utf-8");
+
+		$email_id = $this->input->post('eid');
+
+		$where=array('employee_email_id'=>$email_id);	
+		$res=$this->main_data_model->delete($where,1,'employee_email');
+
+		if($res){
+			echo json_encode(array('status'=>1));
+		}else{
+			echo json_encode(array('status'=>0));
+		}
+		exit;
+	}
+	public function deletePhone()
+	{
+		header("Content-Type:text/html;charset=utf-8");
+
+		$phone_id = $this->input->post('pid');
+
+		$where=array('employee_phone_id'=>$phone_id);	
+		$res=$this->main_data_model->delete($where,1,'employee_phone');
+
+		if($res){
+			echo json_encode(array('status'=>1));
+		}else{
+			echo json_encode(array('status'=>0));
+		}
+		exit;
+	}
+	public function deleteWeixin()
+	{
+		header("Content-Type:text/html;charset=utf-8");
+
+		$weixin_id = $this->input->post('wid');
+
+		$where=array('employee_weixin_id'=>$weixin_id);	
+		$res=$this->main_data_model->delete($where,1,'employee_weixin');
+
+		if($res){
+			echo json_encode(array('status'=>1));
+		}else{
+			echo json_encode(array('status'=>0));
+		}
+		exit;
+	}
 }

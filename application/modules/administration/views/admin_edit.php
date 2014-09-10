@@ -181,14 +181,14 @@
 												<input type="checkbox" class="ace" onclick="hit(this)"/>
 												<span class="lbl">工作手机</span>
 											</label>
-											<input type="hidden" name="phone_hide[]" value="0" />
+											<input type="hidden" name="add_phone_hide[]" value="0" />
 										<?php }else{ ?>
-											<input type="text" placeholder="手机号码" class="col-xs-10 col-sm-8" name="update_phone[<?php echo $employee_phone1['employee_phone_id'];?>]" vaule="<?php echo $employee_phone1['employee_phone_number'];?>" />
+											<input type="text" placeholder="手机号码" class="col-xs-10 col-sm-8" name="update_phone[<?php echo $employee_phone1['employee_phone_id'];?>]" value="<?php echo $employee_phone1['employee_phone_number'];?>" />
 											<label style="float:left;margin-left:15px;">
 												<input type="checkbox" <?php if($employee_phone1['is_workphone']==1){echo 'checked';}?> class="ace" onclick="hit(this)"/>
 												<span class="lbl">工作手机</span>
 											</label>
-											<input type="hidden" name="phone_hide[<?php echo  $employee_phone1['employee_phone_id'];?>]" value="<?php echo  $employee_phone1['is_workphone'];?>">
+											<input type="hidden" name="update_phone_hide[<?php echo $employee_phone1['employee_phone_id'];?>]" value="<?php echo  $employee_phone1['is_workphone'];?>">
 										<?php } ?>
 											<div class="spinner-buttons input-group-btn" style="text-align:center;">
 												<button id="phone_add" type="button" class="btn spinner-up btn-xs btn-success">
@@ -202,14 +202,14 @@
 									<div class="form-group">
 										<div class="col-sm-3"></div>
 										<div class="col-sm-5">
-											<input type="text" name="update_phone[<?php echo  $item['employee_phone_id'];?>]" placeholder="手机号码" class="col-xs-10 col-sm-8" type-data="true" value="<?php echo $item['employee_phone_number'];?>"/>
+											<input type="text" name="update_phone[<?php echo $item['employee_phone_id'];?>]" placeholder="手机号码" class="col-xs-10 col-sm-8" type-data="true" value="<?php echo $item['employee_phone_number'];?>"/>
 											<label style="float:left;margin-left:15px;">
 												<input type="checkbox" <?php if($item['is_workphone']==1){echo 'checked';}?> class="ace" onclick="hit(this)" />
 												<span class="lbl">工作手机</span>
 											</label>
-											<input type="hidden" name="phone_hide[<?php echo $item['employee_phone_id'];?>]" value="<?php echo $item['is_workphone']?>">
+											<input type="hidden" name="update_phone_hide[<?php echo $item['employee_phone_id'];?>]" value="<?php echo $item['is_workphone']?>">
 											<div class="spinner-buttons input-group-btn" style="text-align:center;">
-												<button type="button" onclick="wdcrm.removeInput(this,3);" class="btn spinner-down btn-xs btn-danger">
+												<button type="button" onclick="wdcrm.removeInput(this,3);" class="del_phone btn spinner-down btn-xs btn-danger" pid="<?php echo $item['employee_phone_id'];?>">
 													<i class="icon-minus smaller-75"></i>
 												</button>
 											</div>
@@ -228,15 +228,15 @@
 												<input type="checkbox" class="ace" onclick="hit(this)" />
 												<span class="lbl">工作QQ</span>
 											</label>
-											<input type="hidden" name="qq_hide[]" value="0">
+											<input type="hidden" name="add_qq_hide[]" value="0">
 										<?php }else{ ?>
-											<input type="text" id="form-field-2" placeholder="QQ" class="col-xs-10 col-sm-8" name="update_qq[<?php echo  $employee_qq1['employee_qq_id'];?>]" />
+											<input type="text" id="form-field-2" placeholder="QQ" class="col-xs-10 col-sm-8" name="update_qq[<?php echo  $employee_qq1['employee_qq_id'];?>]" value="<?php echo  $employee_qq1['employee_qq'];?>"/>
 										
 											<label style="float:left;margin-left:15px;">
 												<input type="checkbox" <?php if($employee_qq1['is_workqq']==1){echo 'checked';}?> class="ace" onclick="hit(this)" />
 												<span class="lbl">工作QQ</span>
 											</label>
-											<input type="hidden" name="qq_hide[<?php echo  $employee_qq1['employee_qq_id'];?>]" value="<?php echo  $employee_qq1['is_workqq'];?>">
+											<input type="hidden" name="update_qq_hide[<?php echo  $employee_qq1['employee_qq_id'];?>]" value="<?php echo  $employee_qq1['is_workqq'];?>">
 										<?php } ?>
 											<div class="spinner-buttons input-group-btn" style="text-align:center;">
 												<button id="qq_add" type="button" class="btn spinner-up btn-xs btn-success">
@@ -250,14 +250,14 @@
 									<div class="form-group">
 										<div class="col-sm-3"></div>
 										<div class="col-sm-5">
-											<input type="text" name="update_qq[<?php echo  $item['qq_id'];?>]" placeholder="QQ" class="col-xs-10 col-sm-8" />
+											<input type="text" name="update_qq[<?php echo  $item['employee_qq_id'];?>]" placeholder="QQ" class="col-xs-10 col-sm-8" value="<?php echo $item['employee_qq'];?>" />
 											<label style="float:left;margin-left:15px;">
-												<input type="checkbox"  <?php if($employee_qq['is_workqq']==1){echo 'checked';}?> class="ace" onclick="hit(this)" />
+												<input type="checkbox" <?php if($item['is_workqq']==1){echo 'checked';}?> class="ace" onclick="hit(this)" />
 												<span class="lbl">工作QQ</span>
 											</label>
-											<input type="hidden" name="qq_hide[<?php echo  $item['employee_qq_id'];?>]" value="<?php echo $employee_qq['is_workqq']?>">
+											<input type="hidden" name="update_qq_hide[<?php echo $item['employee_qq_id'];?>]" value="<?php echo $item['is_workqq']?>">
 											<div class="spinner-buttons input-group-btn" style="text-align:center;">
-												<button type="button" onclick="wdcrm.removeInput(this,3);" class="btn spinner-down btn-xs btn-danger">
+												<button type="button" onclick="wdcrm.removeInput(this,3);" class="del_qq btn spinner-down btn-xs btn-danger" qid="<?php echo $item['employee_qq_id'];?>">
 													<i class="icon-minus smaller-75"></i>
 												</button>
 											</div>
@@ -275,14 +275,14 @@
 												<input type="checkbox" class="ace" onclick="hit(this)" />
 												<span class="lbl">工作邮箱</span>
 											</label>
-											<input type="hidden" name="email_hide[]" value="0">
+											<input type="hidden" name="add_email_hide[]" value="0">
 										<?php }else{ ?>
-											<input type="text" id="form-field-2" placeholder="邮箱" class="col-xs-10 col-sm-8" name="update_email<?php echo  $employee_email1['email_id'];?>[]" />
+											<input type="text" id="form-field-2" placeholder="邮箱" class="col-xs-10 col-sm-8" name="update_email[<?php echo  $employee_email1['email_id'];?>]" value="<?php echo $employee_email1['employee_email_number'];?>"/>
 											<label style="float:left;margin-left:15px;">
 												<input type="checkbox" <?php if($employee_email1['is_workemail']==1){echo 'checked';}?> class="ace" onclick="hit(this)" />
 												<span class="lbl">工作邮箱</span>
 											</label>
-											<input type="hidden" name="email_hide[<?php echo $employee_email1['email_id'];?>]" value="<?php echo $employee_email1['is_workemail']?>">
+											<input type="hidden" name="update_email_hide[<?php echo $employee_email1['email_id'];?>]" value="<?php echo $employee_email1['is_workemail']?>">
 										<?php } ?>
 											<div class="spinner-buttons input-group-btn" style="text-align:center;">
 												<button id="email_add" type="button" class="btn spinner-up btn-xs btn-success">
@@ -296,14 +296,14 @@
 									<div class="form-group">
 										<div class="col-sm-3"></div>
 										<div class="col-sm-5">
-											<input type="text" name="update_email[<?php echo  $item['email_id'];?>]" placeholder="邮箱" value="<?php echo $item['employee_email_number'];?>" class="col-xs-10 col-sm-8" />
+											<input type="text" name="update_email[<?php echo $item['email_id'];?>]" placeholder="邮箱" value="<?php echo $item['employee_email_number'];?>" class="col-xs-10 col-sm-8" />
 											<label style="float:left;margin-left:15px;">
 												<input type="checkbox" <?php if($item['is_workemail']==1){echo 'checked';}?> class="ace" onclick="hit(this)" />
 												<span class="lbl">工作邮箱</span>
 											</label>
-											<input type="hidden" name="email_hide[<?php echo  $item['email_id'];?>]" value="<?php echo $employee_email['is_workemail']?>">
+											<input type="hidden" name="update_email_hide[<?php echo $item['email_id'];?>]" value="<?php echo $item['is_workemail']?>">
 											<div class="spinner-buttons input-group-btn" style="text-align:center;">
-												<button type="button" onclick="wdcrm.removeInput(this,3);" class="btn spinner-down btn-xs btn-danger">
+												<button type="button" onclick="wdcrm.removeInput(this,3);" class="del_email btn spinner-down btn-xs btn-danger" eid="<?php echo $item['email_id'];?>">
 													<i class="icon-minus smaller-75"></i>
 												</button>
 											</div>
@@ -316,7 +316,7 @@
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 微信 </label>
 										<div class="col-sm-4">
 										<?php if(empty($employee_weixin1['employee_weixin_number'])){ ?>
-											<input type="text" id="form-field-2" placeholder="微信" class="col-xs-10 col-sm-10" name="emplpyee_weixin[]" />
+											<input type="text" id="form-field-2" placeholder="微信" class="col-xs-10 col-sm-10" name="add_weixin[]" />
 										<?php }else{?>
 											<input type="text" name="update_weixin[<?php echo  $employee_weixin1['employee_weixin_id'];?>]" value="<?php echo $employee_weixin1['employee_weixin_number'];?>" id="form-field-3" placeholder="微信" class="col-xs-10 col-sm-10" />
 										<?php }?>
@@ -334,7 +334,7 @@
 										<div class="col-sm-4">
 											<input type="text" name="update_weixin[<?php echo  $item['employee_weixin_id'];?>]" value="<?php echo $item['employee_weixin_number'];?>" placeholder="微信" class="col-xs-10 col-sm-10" />
 											<div class="spinner-buttons input-group-btn" style="text-align:center;">
-												<button type="button" onclick="wdcrm.removeInput(this,3);" class="btn spinner-down btn-xs btn-danger">
+												<button type="button" onclick="wdcrm.removeInput(this,3);" class="del_weixin btn spinner-down btn-xs btn-danger" wid="<?php echo $item['employee_weixin_id'];?>">
 													<i class="icon-minus smaller-75"></i>
 												</button>
 											</div>
@@ -532,7 +532,7 @@
 						<input type="checkbox" class="ace" onclick="hit(this)" />
 						<span class="lbl">工作手机</span>
 					</label>
-					<input type="hidden" name="phone_hide[]" value="0">
+					<input type="hidden" name="add_phone_hide[]" value="0">
 					<div class="spinner-buttons input-group-btn" style="text-align:center;">
 						<button type="button" onclick="wdcrm.removeInput(this,3);" class="btn spinner-down btn-xs btn-danger">
 							<i class="icon-minus smaller-75"></i>
@@ -551,7 +551,7 @@
 						<input type="checkbox" class="ace" onclick="hit(this)" />
 						<span class="lbl">工作QQ</span>
 					</label>
-					<input type="hidden" name="qq_hide[]" value="0">
+					<input type="hidden" name="add_qq_hide[]" value="0">
 					<div class="spinner-buttons input-group-btn" style="text-align:center;">
 						<button type="button" onclick="wdcrm.removeInput(this,3);" class="btn spinner-down btn-xs btn-danger">
 							<i class="icon-minus smaller-75"></i>
@@ -570,7 +570,7 @@
 						<input type="checkbox" class="ace" onclick="hit(this)" />
 						<span class="lbl">工作邮箱</span>
 					</label>
-					<input type="hidden" name="email_hide[]" value="0">
+					<input type="hidden" name="add_email_hide[]" value="0">
 					<div class="spinner-buttons input-group-btn" style="text-align:center;">
 						<button type="button" onclick="wdcrm.removeInput(this,3);" class="btn spinner-down btn-xs btn-danger">
 							<i class="icon-minus smaller-75"></i>
@@ -623,14 +623,15 @@
 		<script src="<?php echo base_url('assets/js/ajax_class.js');?>"></script>
 		<!-- inline scripts related to this page -->
 		<script>
-				function hit(obj){
-					if($(obj).prop('checked')==true){
-						$(obj).parent().next().val(1);
-					}else{
-						$(obj).parent().next().val(0);
-					}
+			//是否为工作手机QQ邮箱
+			function hit(obj){
+				if($(obj).prop('checked')==true){
+					$(obj).parent().next().val(1);
+				}else{
+					$(obj).parent().next().val(0);
 				}
-				jQuery(function($) {
+			}
+			jQuery(function($) {
  				//时间选择控件
 	 			$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
 					
@@ -666,6 +667,7 @@
 	 			new AddInput('#email_add','email').add();
 	 			new AddInput('#weixin_add','weixin').add();
 			});
+			//出生年月日
 			jQuery(function(){
 
 				function DateSelector(selYear, selMonth, selDay)
@@ -862,7 +864,79 @@
 						sc[i + 1] = new Option(list[i].region_name, list[i].region_id);			
 					}
 				}
+			});
+			jQuery(function($){
+
+				//ajax删除QQ	
+				$('.del_qq').click(function(){
+					var qid=parseInt($(this).attr("qid"));
+					$.ajax({
+				        type: "POST",
+				        url: "<?php echo site_url(module_folder(1).'/admin/deleteQQ');?>",
+				        data: "qid="+qid,
+				        dataType:'json',
+				        success: function(res){
+				       		if(res.status==1){
+				       			//alert("成功");
+				       		}else if(res.status==0){
+				       			//alert("失败");
+				       		}	
+				        }
+			   		});
+				});
+				//ajax删除email	
+				$('.del_email').click(function(){
+					var eid=parseInt($(this).attr("eid"));
+					$.ajax({
+				        type: "POST",
+				        url: "<?php echo site_url(module_folder(1).'/admin/deleteEmail');?>",
+				        data: "eid="+eid,
+				        dataType:'json',
+				        success: function(res){
+				       		if(res.status==1){
+				       			//alert("成功");
+				       		}else if(res.status==0){
+				       			//alert("失败");
+				       		}	
+				        }
+			   		});
+				});
+				//ajax删除phone
+				$('.del_phone').click(function(){
+					var pid=parseInt($(this).attr("pid"));
+					$.ajax({
+				        type: "POST",
+				        url: "<?php echo site_url(module_folder(1).'/admin/deletePhone');?>",
+				        data: "pid="+pid,
+				        dataType:'json',
+				        success: function(res){
+				       		if(res.status==1){
+				       			//alert("成功");
+				       		}else if(res.status==0){
+				       			//alert("失败");
+				       		}	
+				        }
+			   		});
+				});
+				//ajax删除微信
+				$('.del_weixin').click(function(){
+					var wid=parseInt($(this).attr("wid"));
+					$.ajax({
+				        type: "POST",
+				        url: "<?php echo site_url(module_folder(1).'/admin/deleteWeixin');?>",
+				        data: "wid="+wid,
+				        dataType:'json',
+				        success: function(res){
+				       		if(res.status==1){
+				       			//alert("成功");
+				       		}else if(res.status==0){
+				       			//alert("失败");
+				       		}	
+				        }
+			   		});
+				});
 			});	
+			//验证
  			jQuery(function($) {
  				//密码焦点
  				$('input[name="password"]').blur(function () {
@@ -898,15 +972,6 @@
 	                }
 		        });
 
-		        /*$('input[name="pwdconfirm"]').blur(function () {
-		        	var v=$.trim($('input[name="pwdnew"]').val());
-		        	var c = $.trim($(this).val());          
-		            if (v!=c ) {
-		                $('.con_pwd').html('<div style="color: rgb(209, 110, 108);" class="help-block col-xs-12 col-sm-reset inline">密码和确认密码不一致</div>');
-	                } else {
-	                   	$('.con_pwd').html('<div style="color: rgb(123, 160, 101);" class="help-block col-xs-12 col-sm-reset inline">成功</div>');
-	                }
-		        });*/
 				$('.form-horizontal').submit(function () {
 					var p=$.trim($('input[name="password"]').val());
 					var v=$.trim($('input[name="pwdnew"]').val());

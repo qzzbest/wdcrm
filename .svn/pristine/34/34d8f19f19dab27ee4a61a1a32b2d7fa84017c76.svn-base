@@ -43,25 +43,6 @@
 		<script src="assets/js/html5shiv.js"></script>
 		<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
-		<style type="text/css">
-		.tree:before{
-			border-style:none;
-		}
-		#menu li,#menu_course li{
-			list-style: none;
-			line-height: 30px;
-		}
-		#menu li.second,#menu_course li.second{
-			float:left;
-			margin-right: 10px;
-		}
-		.clear{
-			clear: both;
-		}
-		#menu li span.lbl,#menu_course li span.lbl{
-			line-height:21px;
-		}
-		</style>
 	</head>
 
 	<body>
@@ -297,11 +278,7 @@
 												
 											</select>日
 										</div>
-										<div class="col-sm-5">
-											<button type="button" class="btn btn-xs btn-warning advisory_info" data-toggle="modal" data-target="#advisory_info" >生日提醒</button>
-											<span id="remind_people"></span>
-											<input type="hidden" name="remind_peopleid" id="remind_peopleid">
-										</div>
+
 									</div>
 									<div class="space-4"></div>
 
@@ -437,47 +414,7 @@
 				<i class="icon-double-angle-up icon-only bigger-110"></i>
 			</a>
 		</div><!-- /.main-container -->
-		<div aria-hidden="true" aria-labelledby="youModalLabel" role="dialog" tabindex="-1" class="modal fade in" id="advisory_info" style="display: none;">
-		  	<div class="modal-dialog">
-		        <div class="modal-content">
-		         	<div class="modal-header">
-		         		<button type="button" data-dismiss="modal" class="bootbox-close-button close">×</button>
-		            	<h4 id="youModalLabel" class="modal-title">选择提醒人</h4>
-		          	</div>
-		          	<div class="modal-body">
-						<ul id="menu" class="tree-folder-header tree">
-							<?php foreach ($remind as $key => $value) { ?>	
-							<li>
-								<?php if(!empty($value['employee'][0]['employee_name'])){?>
-									<i class="icon-plus"></i>
-									<input type="checkbox" name="employee[]"  class="ace" value="<?php echo $value['department_id'];?>" id="c_<?php echo $key;?>"  />
-									<span class="lbl">
-										<label style="cursor:pointer;" for="c_<?php echo $key;?>"> <?php echo $value['department_name'];?></label> 
-									</span>
-								<?php }?>
-									
-								<?php if(!empty($value['employee'][0]['employee_name'])){?>
-						    	<ul>
-									<?php foreach ($value['employee'] as $k => $v) {?>
-						        		<li class="second">
-						        			<input type="checkbox" class="ace" name="employee_name[]" value="<?php echo $v['employee_id'];?>" />
-						        			
-						        			<span class="lbl" data-event="click"> <?php echo $v['employee_name'];?></span>
-						        		</li>
-									<?php }?>
-									<div class="clear"></div>
-						        </ul>
-								<?php }?>
-						    </li>
-							<?php }?>
-						</ul>
-					</div>    
-		          	<div class="modal-footer">
-			            <button data-dismiss="modal" class="sure btn btn-info" type="button">确定</button>
-			        </div>
-		        </div>
-		  	</div>
-		</div>
+
 		<textarea name="phone" style="display:none;">
 			<div class="form-group">
 				<div class="col-sm-3"></div>
@@ -585,85 +522,6 @@
 					$(obj).parent().next().val(0);
 				}
 			}
-			jQuery(function($){	
-				//ajax获取员工信息		
-				$('.sure').click(function(){
-					var employee_id = new Array(); 
-				  	$('input[name="employee_name[]"]:checked').each(function(){ 
-				    	employee_id.push($(this).val()); //往数组里面推值
-				  	}); 
-					if (employee_id.length > 0){//如果有选中值就提交ajax
-						$("#remind_peopleid").val(employee_id);//隐藏域接收
-					    $.ajax({
-					        type: "POST",
-					        url: "<?php echo site_url(module_folder(1).'/admin/birthdayRemind');?>",
-					        data: "id="+employee_id.join('|'),
-					        dataType:'json',
-					        success: function(res){
-					        	//如果结果不对，不处理
-					        	if(res.status==0){return ;}
-					       		$("#remind_people").html(res.data);
-					        }
-				   		});
-					}else{
-						$("#remind_people").html(''); 
-						$("#remind_peopleid").val(''); 
-					}
-				});
-			});
-			jQuery(function($){	
-
-				//课程列表折叠
-				$("#menu ul").attr("style","display:none;");
-				$('.icon-plus').click(function () {
-					if($(this).siblings('ul').attr("style")=="display:none;"){
-						$(this).siblings('ul').attr("style","display:block; padding-left: 20px;");
-						$(this)[0].className = 'icon-minus';
-					}else{
-						$(this).siblings('ul').attr("style","display:none;");
-						$(this)[0].className = 'icon-plus';
-					}
-				});
-
-				var $p_input = $('#menu').children('li').css({'cursor':'pointer'}).children('input:checkbox');
-				var $c_input = $p_input.siblings('ul').find('li input:checkbox');
-
-				//课程的全选、反选
-				$p_input.on('click',function () {
-
-					var other_that = this;
-					$(this).siblings('ul').find('li input:checkbox').each(function (){
-
-						this.checked = other_that.checked;
-					
-					});
-
-				});
-
-				//选择知识点=>选中课程
-				$c_input.on('click',function () {
-
-					var $p = $(this).parents('ul').siblings(':checkbox');
-					var c_len = $(this).parent().parent().find(':checkbox').filter(':checked').length;
-
-					if(c_len == 0){
-						$p.prop('checked',false);
-					}else{
-						$p.prop('checked',true);
-					}
-
-				});
-				
-				//点击文字，触发旁边的点击事件
-				$('span[data-event="click"]').click(function(){ 
-						
-						var z= $(this).prev();
-						
-						z[0].click(); 
-
-				});
-		
-			});
  			jQuery(function($) {
  				//时间选择控件
 	 			$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){

@@ -135,7 +135,7 @@ class Administration_admin_module extends CI_Module {
 
 
 			#判断用户名是否存在
-			$user=$this->main_data_model->getOtherAll("admin_name",array('show_status'=>1));
+			$user=$this->main_data_model->getAll("admin_name");			
 			for($i=0;$i<count($user);$i++){
 				if($user[$i]['admin_name'] == $data['admin_name']){
 					show_message('用户名已存在');
@@ -431,7 +431,7 @@ class Administration_admin_module extends CI_Module {
 	  		if(!empty($remind_peopleid)){
 				//提交上来的提醒人
 	  			$remind_now = explode(',', $remind_peopleid);
-
+	  			
 	  			//查出原来的提醒人
 	  			$where_birth = array('birthday_employee_id'=>$employee_id);
 				$remind_birth = $this->main_data_model->getOtherAll('employee_id',$where_birth,'time_remind');
@@ -676,6 +676,7 @@ class Administration_admin_module extends CI_Module {
 			if(!empty($remind)){
 				$this->main_data_model->delete($where,1,'time_remind');
 			}
+			
 		}
 	
 		if($result>0){

@@ -105,8 +105,6 @@ ALTER TABLE  `crm_employee` CHANGE  `employee_sex`  `employee_sex` TINYINT NULL 
 导入省市区联动菜单
 9月11日
 ALTER TABLE  `crm_employee` ADD  `show_status` TINYINT NOT NULL DEFAULT  '1' COMMENT  '虚拟删除，1为显示，0为不显示'
-9月12日
-ALTER TABLE  `crm_time_remind` ADD  `birthday_employee_id` INT NULL COMMENT  '员工生日id' AFTER  `employee_id`
 
 ======end=====
 

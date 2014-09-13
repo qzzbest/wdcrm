@@ -135,7 +135,7 @@ class Administration_admin_module extends CI_Module {
 
 
 			#判断用户名是否存在
-			$user=$this->main_data_model->getOtherAll("admin_name",array('show_status'=>1));
+			$user=$this->main_data_model->getAll("admin_name");			
 			for($i=0;$i<count($user);$i++){
 				if($user[$i]['admin_name'] == $data['admin_name']){
 					show_message('用户名已存在');
@@ -427,69 +427,6 @@ class Administration_admin_module extends CI_Module {
 					}
 				}
 			}
-			//生日提醒
-	  		if(!empty($remind_peopleid)){
-				//提交上来的提醒人
-	  			$remind_now = explode(',', $remind_peopleid);
-
-	  			//查出原来的提醒人
-	  			$where_birth = array('birthday_employee_id'=>$employee_id);
-				$remind_birth = $this->main_data_model->getOtherAll('employee_id',$where_birth,'time_remind');
-				//原来没提醒人的话就直接插入，原来有的话就if操作
-				if(!empty($remind_birth)){
-					//降为一维数组
-					$remind_old = array();
-					foreach ($remind_birth as $value) {
-						$remind_old[] = $value['employee_id'];
-					}
-		  			//比较数组,多出来的删除
-		  			$diff_del = array_diff($remind_old,$remind_now);
-
-		  			if(!empty($diff_del)){
-		  				foreach ($diff_del as $key => $value) {
-							$where_del = array('birthday_employee_id'=>$employee_id,'employee_id'=>$value);
-							$this->main_data_model->delete($where_del,1,'time_remind');
-						}
-		  			}	
-					
-					//比较数组,多出来的增加
-		  			$diff_add = array_diff($remind_now,$remind_old);
-
-		  			if(!empty($diff_del)){
-			  			$remind_content = "今天是".$data['employee_name']."的生日，祝他生日快乐";
-			  			foreach ($diff_add as $key => $value) {
-			  				$birth_remind=array(
-			  					'employee_id'=>$value,
-			  					'time_remind_content'=>$remind_content,
-			  					'time_remind_time'=>$data['birthday'],
-			  					'time_remind_status'=>0,
-			  					'birthday_employee_id'=>$employee_id,
-			  				);
-			  				$this->main_data_model->insert($birth_remind,'time_remind');
-			  			}
-			  		}
-				}else{
-					$remind_content = "今天是".$data['employee_name']."的生日，祝他生日快乐";
-		  			foreach ($diff_add as $key => $value) {
-		  				$birth_remind=array(
-		  					'employee_id'=>$value,
-		  					'time_remind_content'=>$remind_content,
-		  					'time_remind_time'=>$data['birthday'],
-		  					'time_remind_status'=>0,
-		  					'birthday_employee_id'=>$employee_id,
-		  				);
-		  				$this->main_data_model->insert($birth_remind,'time_remind');
-		  			}
-				}
-				
-	  		}else{
-	  			//先查，有结果就全部删除
-				$where = array('birthday_employee_id'=>$employee_id);
-				$remind = $this->main_data_model->getOtherAll('employee_id',$where,'time_remind');
-				if(!empty($remind)){
-					$this->main_data_model->delete($where,1,'time_remind');
-				}
-	  		}
 
 			if (isset($result)||isset($res1)||isset($res2)||isset($res3)||isset($res4)||isset($re1)||isset($re2)||isset($re3)||isset($re4)) {
 				show_message('编辑成功!',$location);
@@ -502,6 +439,31 @@ class Administration_admin_module extends CI_Module {
 			$employee_id = $this->uri->segment(5,0);	
 			$where = array('employee_id'=>$employee_id);
 
+			//生日提醒
+			$department=$this->main_data_model->getAll('*','department');
+			$data['remind'] = array();
+			foreach ($department as $key => $value) {
+				$where_depart = array('employee.department_id' => $value['department_id']);
+				$data['remind'][$key]['department_name'] = $value['department_name'];
+				$data['remind'][$key]['department_id'] = $value['department_id'];
+				$data['remind'][$key]['employee']=$this->main_data_model->getOtherAll('employee_id,employee_name',$where_depart,'employee');
+			}
+			$where_birth = array('birthday_employee_id'=>$employee_id);
+			$birth = $this->main_data_model->getOtherAll('employee_id',$where_birth,'time_remind');
+			if(!empty($birth)){
+				$row = array();
+				$str = "<b>提醒(";
+				foreach ($birth as $key => $value) {
+					$row[] = $value['employee_id'];
+					$where_employee = array('employee_id'=>$value['employee_id']);
+					$remind_employee = $this->main_data_model->getOne($where_employee,'employee_name','employee');
+					$str.=$remind_employee['employee_name'].',&nbsp;';
+				}
+				$str.=")</b>";
+				$data['worker'] = $row;
+				$data['birth_id'] = implode(',', $row);
+				$data['remind_name'] = $str;
+			}
 			#员工基本信息
 			$info = $this->main_data_model->getOne($where);
 
@@ -535,37 +497,6 @@ class Administration_admin_module extends CI_Module {
 			$data['employee_email'] = $employee_email;
 			$data['employee_weixin1']= array_shift($employee_weixin);
 			$data['employee_weixin'] = $employee_weixin;
-
-			//生日提醒
-			$department=$this->main_data_model->getAll('*','department');
-			$data['remind'] = array();
-			foreach ($department as $key => $value) {
-				$where_depart = array('employee.department_id' => $value['department_id']);
-				$data['remind'][$key]['department_name'] = $value['department_name'];
-				$data['remind'][$key]['department_id'] = $value['department_id'];
-				$data['remind'][$key]['employee']=$this->main_data_model->getOtherAll('employee_id,employee_name',$where_depart,'employee');
-			}
-			$where_birth = array('birthday_employee_id'=>$employee_id);
-			$birth = $this->main_data_model->getOtherAll('employee_id',$where_birth,'time_remind');
-			if(!empty($birth)){
-				$row = array();
-				$depart = array();
-				$str = "<b>提醒(";
-				foreach ($birth as $key => $value) {
-					$row[] = $value['employee_id'];
-					$where_employee = array('employee_id'=>$value['employee_id']);
-					$remind_employee = $this->main_data_model->getOne($where_employee,'employee_name,department_id','employee');
-					$str.=$remind_employee['employee_name'].',&nbsp;';
-					$depart[] = $remind_employee['department_id'];
-				}
-				$str.=")</b>";
-				
-				$data['birth_id'] = implode(',', $row);//隐藏域的id
-				$data['remind_name'] = $str;//显示提醒人
-				$data['worker'] = $row;//让提醒人默认选中
-				$data['depart'] = array_unique($depart);//让部门默认选中
-			}
-
 			//跳转地址
 			if(isset($_SERVER['HTTP_REFERER'])){
 				$data['location']=$_SERVER['HTTP_REFERER'];
@@ -676,6 +607,7 @@ class Administration_admin_module extends CI_Module {
 			if(!empty($remind)){
 				$this->main_data_model->delete($where,1,'time_remind');
 			}
+			
 		}
 	
 		if($result>0){
